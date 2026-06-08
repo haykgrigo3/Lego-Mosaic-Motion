@@ -7,7 +7,7 @@ This is not a filter
 
 ![Lego Mosaic Motion Demo](topuria-ufc-lego-mosaic-loop.gif)
 
-each frame has been converted to a lego mosaic/
+each frame has been converted to a lego mosaic
 
 This project is not affiliated with The Lego Group
 
