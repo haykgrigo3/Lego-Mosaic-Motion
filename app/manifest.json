@@ -1,0 +1,10 @@
+{
+  "name": "LEGO Mosaic Motion",
+  "short_name": "Mosaic Motion",
+  "description": "Create LEGO-style mosaic motion clips directly in the browser.",
+  "theme_color": "#c7472a",
+  "background_color": "#f4efe4",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/"
+}

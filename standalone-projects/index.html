@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Standalone Project Viewer</title>
+    <style>
+      :root {
+        --bg: #f5efe4;
+        --panel: rgba(255, 251, 245, 0.92);
+        --border: rgba(72, 52, 31, 0.14);
+        --ink: #1f2328;
+        --muted: #5d6976;
+        --accent: #c7472a;
+        --accent-dark: #8e2f18;
+        --shadow: 0 16px 38px rgba(65, 43, 21, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.78), transparent 34%),
+          linear-gradient(140deg, #f8f3ea 0%, #eedecb 52%, #e5c8aa 100%);
+      }
+
+      .shell {
+        width: min(1180px, calc(100vw - 28px));
+        margin: 16px auto 28px;
+      }
+
+      .hero,
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .hero {
+        padding: 26px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--accent-dark);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(30px, 5vw, 52px);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+        margin: 14px 0 18px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .hero-actions,
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+        grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+      }
+
+      .panel {
+        padding: 18px;
+        min-width: 0;
+      }
+
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      button,
+      .link-button,
+      input[type="file"]::file-selector-button {
+        min-height: 46px;
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: 0;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      button,
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .primary {
+        color: #fff8f2;
+        background: linear-gradient(135deg, var(--accent) 0%, #de6d47 100%);
+      }
+
+      .secondary,
+      input[type="file"]::file-selector-button {
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(72, 52, 31, 0.14);
+      }
+
+      button:disabled {
+        opacity: 0.58;
+        cursor: not-allowed;
+      }
+
+      input[type="file"] {
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+
+      .status {
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+        color: var(--muted);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+
+      .status.error {
+        color: #8f1f1b;
+        background: rgba(255, 241, 240, 0.92);
+        border-color: rgba(143, 31, 27, 0.2);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .stat,
+      .palette-card,
+      .frame-list {
+        min-width: 0;
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+      }
+
+      .stat-label {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .stat-value {
+        display: block;
+        margin-top: 6px;
+        font-size: 17px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .viewer-shell {
+        display: grid;
+        gap: 16px;
+      }
+
+      .canvas-wrap {
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+      }
+
+      .canvas-frame {
+        width: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(23, 31, 40, 0.96), rgba(46, 59, 74, 0.96));
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .scrub-row {
+        display: grid;
+        gap: 10px;
+      }
+
+      .scrub-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .palette-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .palette-swatch {
+        width: 100%;
+        height: 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(31, 35, 40, 0.12);
+      }
+
+      .palette-name {
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .palette-meta,
+      .frame-list li {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .frame-list ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .frame-list li + li {
+        margin-top: 6px;
+      }
+
+      .hint-list {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+
+      .hint-list li + li {
+        margin-top: 6px;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: min(100vw - 16px, 1180px);
+          margin: 8px auto 20px;
+        }
+
+        .hero,
+        .panel {
+          border-radius: 20px;
+        }
+
+        .hero {
+          padding: 20px 16px;
+        }
+
+        .panel {
+          padding: 16px;
+        }
+
+        .hero-actions,
+        .button-row {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .canvas-frame {
+          aspect-ratio: 1 / 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Standalone Bundle</p>
+        <h1>Project Viewer</h1>
+        <p class="hero-copy">
+          Load any exported <code>project.json</code> and inspect the mosaic animation without using the main site.
+          This viewer reconstructs frames directly from the encoded palette runs.
+        </p>
+        <div class="hero-actions">
+          <button class="primary" id="load-demo-button" type="button">Load Bundled Demo</button>
+          <a class="secondary link-button" href="../app/index.html">Open Main App</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel stack">
+          <div class="field">
+            <label for="project-file-input">Project JSON</label>
+            <input id="project-file-input" type="file" accept=".json,application/json" />
+          </div>
+          <div class="status" id="status-box">
+            Load an exported <code>project.json</code> file or use the bundled demo project.
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-label">Project</span>
+              <span class="stat-value" id="project-name-stat">No project</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Grid</span>
+              <span class="stat-value" id="grid-stat">-</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Frames</span>
+              <span class="stat-value" id="frame-stat">-</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Palette</span>
+              <span class="stat-value" id="palette-stat">-</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Stud Style</span>
+              <span class="stat-value" id="stud-stat">-</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Source</span>
+              <span class="stat-value" id="source-stat">-</span>
+            </div>
+          </div>
+          <div class="palette-card">
+            <strong>Repo Bundle Workflow</strong>
+            <ul class="hint-list" style="margin-top: 10px">
+              <li>Put exported bundles inside <code>standalone-projects/projects/</code>.</li>
+              <li>Commit the raw files so people can browse them directly on GitHub.</li>
+              <li>Load the matching <code>project.json</code> here to preview the animation locally.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="viewer-shell">
+          <div class="panel stack">
+            <div class="canvas-wrap">
+              <div class="canvas-frame">
+                <canvas id="viewer-canvas" width="640" height="640"></canvas>
+              </div>
+            </div>
+            <div class="scrub-row">
+              <div class="button-row">
+                <button class="primary" id="play-button" type="button" disabled>Play</button>
+                <button class="secondary" id="prev-button" type="button" disabled>Previous Frame</button>
+                <button class="secondary" id="next-button" type="button" disabled>Next Frame</button>
+              </div>
+              <input id="frame-slider" type="range" min="1" max="1" step="1" value="1" disabled />
+              <div class="scrub-meta">
+                <span id="frame-meta">Frame - / -</span>
+                <span id="time-meta">Time -</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel stack">
+            <div>
+              <h2 style="margin: 0 0 8px">Palette</h2>
+              <div class="palette-grid" id="palette-grid"></div>
+            </div>
+            <div>
+              <h2 style="margin: 0 0 8px">Current Frame Piece Counts</h2>
+              <div class="frame-list" id="frame-piece-list">Load a project to inspect per-frame color counts.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const canvas = document.getElementById("viewer-canvas");
+      const context = canvas.getContext("2d");
+
+      const elements = {
+        fileInput: document.getElementById("project-file-input"),
+        loadDemoButton: document.getElementById("load-demo-button"),
+        playButton: document.getElementById("play-button"),
+        prevButton: document.getElementById("prev-button"),
+        nextButton: document.getElementById("next-button"),
+        frameSlider: document.getElementById("frame-slider"),
+        statusBox: document.getElementById("status-box"),
+        projectNameStat: document.getElementById("project-name-stat"),
+        gridStat: document.getElementById("grid-stat"),
+        frameStat: document.getElementById("frame-stat"),
+        paletteStat: document.getElementById("palette-stat"),
+        studStat: document.getElementById("stud-stat"),
+        sourceStat: document.getElementById("source-stat"),
+        frameMeta: document.getElementById("frame-meta"),
+        timeMeta: document.getElementById("time-meta"),
+        paletteGrid: document.getElementById("palette-grid"),
+        framePieceList: document.getElementById("frame-piece-list")
+      };
+
+      const state = {
+        project: null,
+        expandedFrames: [],
+        currentFrameIndex: 0,
+        playbackTimer: null
+      };
+
+      function setStatus(message, isError = false) {
+        elements.statusBox.innerHTML = message;
+        elements.statusBox.classList.toggle("error", isError);
+      }
+
+      function stopPlayback() {
+        if (state.playbackTimer != null) {
+          clearInterval(state.playbackTimer);
+          state.playbackTimer = null;
+        }
+        elements.playButton.textContent = "Play";
+      }
+
+      function setControlsEnabled(enabled) {
+        elements.playButton.disabled = !enabled;
+        elements.prevButton.disabled = !enabled;
+        elements.nextButton.disabled = !enabled;
+        elements.frameSlider.disabled = !enabled;
+      }
+
+      function validateProject(project) {
+        if (project == null || typeof project !== "object") {
+          throw new Error("Project JSON is missing or invalid.");
+        }
+        if (!project.output || !project.palette || !Array.isArray(project.frames)) {
+          throw new Error("Project JSON is missing output, palette, or frames data.");
+        }
+        if (!Array.isArray(project.palette.colors) || project.palette.colors.length === 0) {
+          throw new Error("Project JSON does not contain any palette colors.");
+        }
+        if (project.frames.length === 0) {
+          throw new Error("Project JSON does not contain any frames.");
+        }
+      }
+
+      function normalizeHex(hex) {
+        return String(hex || "").toLowerCase();
+      }
+
+      function getPaletteColor(project, colorIndex) {
+        return project.palette.colors.find((color) => color.colorIndex === colorIndex);
+      }
+
+      function expandPaletteRuns(frame, cellCount) {
+        const expanded = new Array(cellCount);
+        let cursor = 0;
+
+        frame.paletteRuns.forEach((run) => {
+          const colorIndex = run[0];
+          const runLength = run[1];
+          for (let index = 0; index < runLength; index += 1) {
+            expanded[cursor] = colorIndex;
+            cursor += 1;
+          }
+        });
+
+        if (cursor !== cellCount) {
+          throw new Error(`Frame ${frame.frameNumber} expands to ${cursor} cells instead of ${cellCount}.`);
+        }
+
+        return expanded;
+      }
+
+      function drawStud(x, y, cellSize, colorHex, studShape) {
+        const inset = cellSize * 0.08;
+        const centerX = x + cellSize / 2;
+        const centerY = y + cellSize / 2;
+        const radius = cellSize * 0.42;
+
+        context.fillStyle = colorHex;
+        context.lineWidth = Math.max(1, cellSize * 0.06);
+        context.strokeStyle = "rgba(12, 14, 20, 0.28)";
+
+        if (studShape === "square-tile") {
+          context.beginPath();
+          context.rect(x + inset, y + inset, cellSize - inset * 2, cellSize - inset * 2);
+          context.fill();
+          context.stroke();
+          return;
+        }
+
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        context.fill();
+        context.stroke();
+
+        if (studShape === "round-plate") {
+          context.beginPath();
+          context.arc(centerX, centerY, radius * 0.56, 0, Math.PI * 2);
+          context.lineWidth = Math.max(1, cellSize * 0.045);
+          context.strokeStyle = "rgba(255, 255, 255, 0.42)";
+          context.stroke();
+        }
+      }
+
+      function renderPalette(project) {
+        elements.paletteGrid.innerHTML = "";
+        project.palette.colors.forEach((color) => {
+          const card = document.createElement("div");
+          card.className = "palette-card";
+          card.innerHTML = `
+            <div class="palette-swatch" style="background:${color.hex}"></div>
+            <div class="palette-name">${color.name}</div>
+            <div class="palette-meta">${normalizeHex(color.hex)}</div>
+          `;
+          elements.paletteGrid.appendChild(card);
+        });
+      }
+
+      function renderFramePieces(frame) {
+        const list = document.createElement("ul");
+        frame.pieceCounts.forEach((entry) => {
+          const item = document.createElement("li");
+          item.textContent = `${entry.colorName} (${entry.colorHex}) - ${entry.count}`;
+          list.appendChild(item);
+        });
+        elements.framePieceList.innerHTML = "";
+        elements.framePieceList.appendChild(list);
+      }
+
+      function resizeCanvasForProject(project) {
+        const maxSize = 720;
+        const width = project.output.width;
+        const height = project.output.height;
+        const longestSide = Math.max(width, height);
+        const cellSize = Math.max(8, Math.floor(maxSize / longestSide));
+        canvas.width = width * cellSize;
+        canvas.height = height * cellSize;
+        return cellSize;
+      }
+
+      function renderCurrentFrame() {
+        if (state.project == null) {
+          return;
+        }
+
+        const project = state.project;
+        const frame = project.frames[state.currentFrameIndex];
+        const expanded = state.expandedFrames[state.currentFrameIndex];
+        const cellSize = resizeCanvasForProject(project);
+
+        context.fillStyle = "#0d1319";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let row = 0; row < project.output.height; row += 1) {
+          for (let col = 0; col < project.output.width; col += 1) {
+            const colorIndex = expanded[row * project.output.width + col];
+            const color = getPaletteColor(project, colorIndex);
+            drawStud(
+              col * cellSize,
+              row * cellSize,
+              cellSize,
+              color ? color.hex : "#ff00ff",
+              project.output.studShape
+            );
+          }
+        }
+
+        elements.frameSlider.value = String(state.currentFrameIndex + 1);
+        elements.frameMeta.textContent = `Frame ${state.currentFrameIndex + 1} / ${project.frames.length}`;
+        elements.timeMeta.textContent = `Time ${Number(frame.timeSeconds).toFixed(3)}s`;
+        renderFramePieces(frame);
+      }
+
+      function updateProjectStats(project, sourceLabel) {
+        elements.projectNameStat.textContent = sourceLabel;
+        elements.gridStat.textContent = `${project.output.width} x ${project.output.height}`;
+        elements.frameStat.textContent = `${project.output.frameCount} @ ${project.output.fps} FPS`;
+        elements.paletteStat.textContent = `${project.palette.colors.length} colors`;
+        elements.studStat.textContent = project.output.pieceType || project.output.studShape || "-";
+        elements.sourceStat.textContent = project.source && project.source.fileName ? project.source.fileName : "Unknown";
+      }
+
+      function loadProject(project, sourceLabel) {
+        validateProject(project);
+        stopPlayback();
+
+        const cellCount = project.output.width * project.output.height;
+        const expandedFrames = project.frames.map((frame) => expandPaletteRuns(frame, cellCount));
+
+        state.project = project;
+        state.expandedFrames = expandedFrames;
+        state.currentFrameIndex = 0;
+
+        updateProjectStats(project, sourceLabel);
+        renderPalette(project);
+
+        elements.frameSlider.min = "1";
+        elements.frameSlider.max = String(project.frames.length);
+        elements.frameSlider.value = "1";
+        setControlsEnabled(true);
+        renderCurrentFrame();
+
+        setStatus(
+          `Loaded <strong>${sourceLabel}</strong>. This bundle has ${project.frames.length} frames and ${project.palette.colors.length} palette colors.`,
+          false
+        );
+      }
+
+      async function readProjectFile(file) {
+        const text = await file.text();
+        const project = JSON.parse(text);
+        loadProject(project, file.name);
+      }
+
+      function stepFrame(direction) {
+        if (state.project == null) {
+          return;
+        }
+        const frameCount = state.project.frames.length;
+        state.currentFrameIndex = (state.currentFrameIndex + direction + frameCount) % frameCount;
+        renderCurrentFrame();
+      }
+
+      function togglePlayback() {
+        if (state.project == null) {
+          return;
+        }
+
+        if (state.playbackTimer != null) {
+          stopPlayback();
+          return;
+        }
+
+        const intervalMs = Math.max(40, Math.round(1000 / state.project.output.fps));
+        elements.playButton.textContent = "Pause";
+        state.playbackTimer = setInterval(() => {
+          stepFrame(1);
+        }, intervalMs);
+      }
+
+      async function loadBundledDemo() {
+        try {
+          setStatus("Loading the bundled demo project...", false);
+          const response = await fetch("./projects/demo-project/project.json", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error(`Could not load bundled demo (${response.status}).`);
+          }
+          const project = await response.json();
+          loadProject(project, "demo-project/project.json");
+        } catch (error) {
+          setStatus(
+            `The bundled demo could not be loaded here. Open this folder through a local server or load a project JSON manually. (${error.message})`,
+            true
+          );
+        }
+      }
+
+      elements.fileInput.addEventListener("change", async () => {
+        const file = elements.fileInput.files[0];
+        if (file == null) {
+          return;
+        }
+        try {
+          await readProjectFile(file);
+        } catch (error) {
+          setStatus(`Could not parse that project file. ${error.message}`, true);
+          setControlsEnabled(false);
+        }
+      });
+
+      elements.loadDemoButton.addEventListener("click", loadBundledDemo);
+      elements.playButton.addEventListener("click", togglePlayback);
+      elements.prevButton.addEventListener("click", () => {
+        stopPlayback();
+        stepFrame(-1);
+      });
+      elements.nextButton.addEventListener("click", () => {
+        stopPlayback();
+        stepFrame(1);
+      });
+      elements.frameSlider.addEventListener("input", () => {
+        if (state.project == null) {
+          return;
+        }
+        stopPlayback();
+        state.currentFrameIndex = Number(elements.frameSlider.value) - 1;
+        renderCurrentFrame();
+      });
+
+      if (window.location.search.includes("demo=1")) {
+        loadBundledDemo();
+      }
+
+      setControlsEnabled(false);
+    </script>
+  </body>
+</html>

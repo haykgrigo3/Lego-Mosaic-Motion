@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LEGO Mosaic Motion Studio</title>
+    <style>
+      :root {
+        --page-bg: #f4efe4;
+        --panel-bg: rgba(255, 250, 242, 0.92);
+        --panel-border: rgba(72, 52, 31, 0.16);
+        --ink: #1f2328;
+        --muted: #5d6976;
+        --accent: #c7472a;
+        --accent-dark: #8e2f18;
+        --accent-soft: #f4c2a8;
+        --shadow: 0 18px 40px rgba(65, 43, 21, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.78), transparent 34%),
+          linear-gradient(140deg, #f7f2e8 0%, #eddcc8 48%, #e1c4a5 100%);
+        overflow-x: hidden;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1280px, calc(100vw - 32px));
+        margin: 20px auto 32px;
+      }
+
+      .hero,
+      .panel {
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .hero {
+        padding: 28px 28px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-disclaimer {
+        display: inline-flex;
+        margin-bottom: 14px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(72, 52, 31, 0.12);
+        background: rgba(255, 255, 255, 0.82);
+        color: var(--accent-dark);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(199, 71, 42, 0.22), rgba(199, 71, 42, 0));
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--accent-dark);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(32px, 5vw, 56px);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy {
+        max-width: 740px;
+        margin: 14px 0 18px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .badge {
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .controls-grid {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+      }
+
+      .panel {
+        padding: 18px;
+        min-width: 0;
+      }
+
+      .panel h2 {
+        margin: 0 0 6px;
+        font-size: 18px;
+      }
+
+      .panel p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .span-4 {
+        grid-column: span 4;
+      }
+
+      .span-6 {
+        grid-column: span 6;
+      }
+
+      .span-8 {
+        grid-column: span 8;
+      }
+
+      .span-12 {
+        grid-column: span 12;
+      }
+
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .field-wide {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      input[type="number"],
+      input[type="range"],
+      select,
+      input[type="file"] {
+        width: 100%;
+      }
+
+      input[type="number"],
+      select {
+        min-height: 42px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(72, 52, 31, 0.16);
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--ink);
+        font: inherit;
+        font-size: 16px;
+      }
+
+      input[type="range"] {
+        accent-color: var(--accent);
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 2px;
+        min-width: 0;
+      }
+
+      .checkbox-row input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--accent);
+        flex: 0 0 auto;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .button-row > *,
+      .output-row > * {
+        flex: 1 1 220px;
+      }
+
+      button,
+      .link-button {
+        min-height: 46px;
+        padding: 12px 16px;
+        border: 0;
+        border-radius: 14px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+        font-size: 16px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        display: inline-flex;
+      }
+
+      button:hover,
+      .link-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .primary-button {
+        color: #fff8f2;
+        background: linear-gradient(135deg, var(--accent) 0%, #de6d47 100%);
+        box-shadow: 0 10px 22px rgba(199, 71, 42, 0.24);
+      }
+
+      .secondary-button,
+      .link-button {
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(72, 52, 31, 0.14);
+      }
+
+      .link-button[hidden] {
+        display: none;
+      }
+
+      button:disabled {
+        opacity: 0.58;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .preview-card {
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+        min-width: 0;
+      }
+
+      .preview-card h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+
+      .canvas-frame,
+      .video-frame {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 16px;
+        overflow: hidden;
+        background:
+          linear-gradient(135deg, rgba(23, 31, 40, 0.96), rgba(46, 59, 74, 0.96));
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      canvas,
+      video {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      video {
+        object-fit: contain;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .stat {
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+        min-width: 0;
+      }
+
+      .stat-label {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .stat-value {
+        display: block;
+        margin-top: 6px;
+        font-size: 17px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .status {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(72, 52, 31, 0.12);
+        color: var(--muted);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+
+      .status.error {
+        color: #8f1f1b;
+        border-color: rgba(143, 31, 27, 0.2);
+        background: rgba(255, 241, 240, 0.92);
+      }
+
+      .progress-shell {
+        margin-top: 12px;
+        height: 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(72, 52, 31, 0.12);
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--accent) 0%, #f0a06d 100%);
+        transition: width 120ms linear;
+      }
+
+      .output-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .hint-list {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+
+      .hint-list li + li {
+        margin-top: 6px;
+      }
+
+      .fine-print {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 1100px) {
+        .span-4,
+        .span-6,
+        .span-8 {
+          grid-column: span 12;
+        }
+
+        .preview-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: min(100vw - 18px, 1280px);
+          margin: 10px auto 24px;
+        }
+
+        .hero,
+        .panel {
+          border-radius: 20px;
+        }
+
+        .hero {
+          padding: 22px 18px 20px;
+        }
+
+        .hero::after {
+          top: -90px;
+          right: -90px;
+          width: 180px;
+          height: 180px;
+        }
+
+        h1 {
+          font-size: clamp(30px, 10vw, 42px);
+        }
+
+        .hero-copy {
+          margin-bottom: 16px;
+          font-size: 15px;
+        }
+
+        .hero-badges {
+          gap: 8px;
+        }
+
+        .badge {
+          font-size: 12px;
+        }
+
+        .panel {
+          padding: 16px;
+        }
+
+        .field-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .checkbox-row {
+          align-items: flex-start;
+        }
+
+        .button-row,
+        .output-row,
+        .hero-actions {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .button-row > *,
+        .output-row > * {
+          width: 100%;
+        }
+
+        .preview-card {
+          padding: 12px;
+        }
+
+        .canvas-frame,
+        .video-frame {
+          aspect-ratio: 1 / 1;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .shell {
+          width: min(100vw - 12px, 1280px);
+          margin: 6px auto 18px;
+        }
+
+        .hero,
+        .panel {
+          border-radius: 18px;
+        }
+
+        .hero {
+          padding: 18px 14px 16px;
+        }
+
+        .panel {
+          padding: 14px;
+        }
+
+        .eyebrow {
+          letter-spacing: 0.12em;
+        }
+
+        .status,
+        .stat,
+        .preview-card {
+          border-radius: 14px;
+        }
+
+        .progress-shell {
+          height: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-disclaimer">Not affiliated with the LEGO Group</div>
+        <p class="eyebrow">Video To Mosaic</p>
+        <h1>LEGO Mosaic Motion Studio</h1>
+        <p class="hero-copy">
+          Build a clean, larger-format Lego mosaic motion video from a short source clip. Load a video, frame the
+          first shot, tune the palette and contrast, then render a silent mosaic video plus optional PNG frames.
+        </p>
+        <div class="hero-badges">
+          <span class="badge">Client-side processing</span>
+          <span class="badge">Short clips work best</span>
+          <span class="badge">Stable palette across frames</span>
+          <span class="badge">Made for close-ups and silhouette-heavy footage</span>
+        </div>
+        <div class="hero-actions">
+          <a
+            class="link-button"
+            href="https://github.com/haykgrigo3/Lego-Mosaic-Motion"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Source Code
+          </a>
+        </div>
+      </section>
+
+      <section class="grid controls-grid">
+        <div class="panel span-4">
+          <h2>Input</h2>
+          <p>Load a short MP4 or WebM clip. The first frame becomes the live preview for framing and color tuning.</p>
+          <div class="stack" style="margin-top: 16px">
+            <div class="field">
+              <label for="video-input">Source Video</label>
+              <input id="video-input" type="file" accept="video/*" />
+            </div>
+            <div class="status" id="input-status">
+              No video selected yet.
+            </div>
+          </div>
+          <ul class="hint-list">
+            <li>Start with 6 to 10 FPS for motion clips.</li>
+            <li>Tighter crops and higher contrast usually read better in mosaic form.</li>
+            <li>Renders are capped to 300 frames for this MVP to keep memory reasonable.</li>
+          </ul>
+        </div>
+
+        <div class="panel span-4">
+          <h2>Framing And Output</h2>
+          <p>Set the mosaic size, aspect, crop zoom, and output cadence. The crop overlay updates on the first frame.</p>
+          <div class="field-grid">
+            <div class="field">
+              <label for="width-input">Mosaic Width</label>
+              <input id="width-input" type="number" min="24" max="160" step="1" value="72" />
+            </div>
+            <div class="field">
+              <label for="height-input">Mosaic Height</label>
+              <input id="height-input" type="number" min="24" max="160" step="1" value="72" />
+            </div>
+            <div class="field field-wide">
+              <label class="checkbox-row" for="lock-aspect-input">
+                <input id="lock-aspect-input" type="checkbox" checked />
+                <span>Preserve the source video aspect when width changes</span>
+              </label>
+            </div>
+            <div class="field">
+              <label for="fps-input">Render FPS</label>
+              <select id="fps-input">
+                <option value="6">6 FPS</option>
+                <option value="8" selected>8 FPS</option>
+                <option value="10">10 FPS</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="render-scale-input">Stud Render Size</label>
+              <select id="render-scale-input">
+                <option value="10">Compact</option>
+                <option value="12" selected>Medium</option>
+                <option value="16">Large</option>
+              </select>
+            </div>
+            <div class="field field-wide">
+              <label for="zoom-input">Crop Zoom</label>
+              <input id="zoom-input" type="range" min="1" max="4" step="0.01" value="1" />
+            </div>
+            <div class="field">
+              <label for="pan-x-input">Pan X</label>
+              <input id="pan-x-input" type="range" min="-100" max="100" step="1" value="0" />
+            </div>
+            <div class="field">
+              <label for="pan-y-input">Pan Y</label>
+              <input id="pan-y-input" type="range" min="-100" max="100" step="1" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="panel span-4">
+          <h2>Palette And Look</h2>
+          <p>Use a consistent Lego palette across the whole clip. Dithering is optional, but off is usually steadier.</p>
+          <div class="field-grid">
+            <div class="field field-wide">
+              <label for="palette-input">Palette Preset</label>
+              <select id="palette-input"></select>
+            </div>
+            <div class="field">
+              <label for="dither-input">Dithering</label>
+              <select id="dither-input">
+                <option value="none" selected>None</option>
+                <option value="floyd">Floyd-Steinberg</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="stud-shape-input">Stud Style</label>
+              <select id="stud-shape-input">
+                <option value="round-tile" selected>Round Tile</option>
+                <option value="round-plate">Round Plate</option>
+                <option value="square-tile">Square Tile</option>
+              </select>
+            </div>
+            <div class="field field-wide">
+              <label for="saturation-input">Saturation</label>
+              <input id="saturation-input" type="range" min="-100" max="100" step="1" value="6" />
+            </div>
+            <div class="field">
+              <label for="brightness-input">Brightness</label>
+              <input id="brightness-input" type="range" min="-100" max="100" step="1" value="4" />
+            </div>
+            <div class="field">
+              <label for="contrast-input">Contrast</label>
+              <input id="contrast-input" type="range" min="-100" max="100" step="1" value="16" />
+            </div>
+          </div>
+        </div>
+
+        <div class="panel span-8">
+          <h2>Preview</h2>
+          <p>The left preview shows the full first frame with the crop overlay. The right preview shows the Lego result.</p>
+          <div class="preview-grid" style="margin-top: 16px">
+            <div class="preview-card">
+              <h3>Source Frame</h3>
+              <div class="canvas-frame">
+                <canvas id="source-preview-canvas" width="960" height="540"></canvas>
+              </div>
+            </div>
+            <div class="preview-card">
+              <h3>Mosaic Preview</h3>
+              <div class="canvas-frame">
+                <canvas id="mosaic-preview-canvas" width="960" height="540"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-label">Source</span>
+              <span class="stat-value" id="source-stat">No clip</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Palette Size</span>
+              <span class="stat-value" id="palette-stat">0 colors</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Frame Count</span>
+              <span class="stat-value" id="frame-count-stat">0 frames</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Output</span>
+              <span class="stat-value" id="output-stat">72 x 72</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel span-4">
+          <h2>Render</h2>
+          <p>Render the clip frame-by-frame with the current framing and palette. The MVP exports a silent video and a project package.</p>
+          <div class="button-row">
+            <button class="primary-button" id="render-button" type="button" disabled>Render Mosaic Motion Video</button>
+            <button class="secondary-button" id="refresh-preview-button" type="button" disabled>Refresh Preview</button>
+          </div>
+          <div class="field-grid" style="margin-top: 14px">
+            <div class="field field-wide">
+              <label class="checkbox-row" for="export-frames-input">
+                <input id="export-frames-input" type="checkbox" checked />
+                <span>Include PNG frames inside the project ZIP when available</span>
+              </label>
+            </div>
+          </div>
+          <div class="status" id="render-status">
+            Load a video to start.
+          </div>
+          <div class="progress-shell" aria-hidden="true">
+            <div class="progress-bar" id="render-progress-bar"></div>
+          </div>
+          <div class="output-row">
+            <a class="link-button" id="download-video-link" download hidden>Download Motion Video</a>
+            <a class="link-button" id="download-zip-link" download hidden>Download Project ZIP</a>
+          </div>
+          <div class="preview-card" style="margin-top: 16px">
+            <h3>Rendered Output</h3>
+            <div class="video-frame">
+              <video id="output-video" controls playsinline></video>
+            </div>
+          </div>
+          <div class="fine-print">
+            WebM and MP4 availability depends on the browser’s `MediaRecorder` support. When ZIP support is available,
+            the project package includes instructions, piece lists, and JSON data for custom pipelines.
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="js/bricklink-colors.js"></script>
+    <script src="js/stud-maps.js"></script>
+    <script src="js/motion-studio.js"></script>
+  </body>
+</html>

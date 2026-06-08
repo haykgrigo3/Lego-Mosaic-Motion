@@ -1,0 +1,138 @@
+{
+  "overallPlacements": [
+    {
+      "colorIndex": 0,
+      "colorName": "Black",
+      "colorHex": "#212121",
+      "count": 28
+    },
+    {
+      "colorIndex": 1,
+      "colorName": "White",
+      "colorHex": "#ffffff",
+      "count": 16
+    },
+    {
+      "colorIndex": 2,
+      "colorName": "Red",
+      "colorHex": "#b30006",
+      "count": 10
+    },
+    {
+      "colorIndex": 3,
+      "colorName": "Blue",
+      "colorHex": "#0057a6",
+      "count": 10
+    }
+  ],
+  "peakFrameInventory": [
+    {
+      "colorIndex": 0,
+      "colorName": "Black",
+      "colorHex": "#212121",
+      "count": 12
+    },
+    {
+      "colorIndex": 1,
+      "colorName": "White",
+      "colorHex": "#ffffff",
+      "count": 12
+    },
+    {
+      "colorIndex": 2,
+      "colorName": "Red",
+      "colorHex": "#b30006",
+      "count": 6
+    },
+    {
+      "colorIndex": 3,
+      "colorName": "Blue",
+      "colorHex": "#0057a6",
+      "count": 6
+    }
+  ],
+  "perFrame": [
+    {
+      "frameNumber": 1,
+      "fileName": "demo-project-frame-0001.png",
+      "timeSeconds": 0,
+      "pieceCounts": [
+        {
+          "colorIndex": 0,
+          "colorName": "Black",
+          "colorHex": "#212121",
+          "count": 12
+        },
+        {
+          "colorIndex": 2,
+          "colorName": "Red",
+          "colorHex": "#b30006",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "frameNumber": 2,
+      "fileName": "demo-project-frame-0002.png",
+      "timeSeconds": 0.5,
+      "pieceCounts": [
+        {
+          "colorIndex": 0,
+          "colorName": "Black",
+          "colorHex": "#212121",
+          "count": 12
+        },
+        {
+          "colorIndex": 3,
+          "colorName": "Blue",
+          "colorHex": "#0057a6",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "frameNumber": 3,
+      "fileName": "demo-project-frame-0003.png",
+      "timeSeconds": 1,
+      "pieceCounts": [
+        {
+          "colorIndex": 1,
+          "colorName": "White",
+          "colorHex": "#ffffff",
+          "count": 12
+        },
+        {
+          "colorIndex": 0,
+          "colorName": "Black",
+          "colorHex": "#212121",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "frameNumber": 4,
+      "fileName": "demo-project-frame-0004.png",
+      "timeSeconds": 1.5,
+      "pieceCounts": [
+        {
+          "colorIndex": 2,
+          "colorName": "Red",
+          "colorHex": "#b30006",
+          "count": 6
+        },
+        {
+          "colorIndex": 3,
+          "colorName": "Blue",
+          "colorHex": "#0057a6",
+          "count": 6
+        },
+        {
+          "colorIndex": 1,
+          "colorName": "White",
+          "colorHex": "#ffffff",
+          "count": 4
+        }
+      ]
+    }
+  ]
+}

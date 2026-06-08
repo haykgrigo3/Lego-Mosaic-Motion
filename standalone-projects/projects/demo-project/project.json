@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-08T00:00:00.000Z",
+  "app": "LEGO Mosaic Motion Studio",
+  "source": {
+    "fileName": "demo-source.mp4",
+    "width": 1280,
+    "height": 1280,
+    "durationSeconds": 2
+  },
+  "output": {
+    "width": 4,
+    "height": 4,
+    "fps": 2,
+    "renderScale": 16,
+    "studShape": "square-tile",
+    "pieceType": "1x1 square tiles",
+    "frameCount": 4
+  },
+  "framing": {
+    "preserveAspectRatio": true,
+    "zoom": 1,
+    "panX": 0,
+    "panY": 0
+  },
+  "look": {
+    "brightness": 0,
+    "contrast": 0,
+    "saturation": 0,
+    "dither": "none"
+  },
+  "frameEncoding": {
+    "type": "row-major-rle",
+    "origin": "top-left",
+    "order": "left-to-right then top-to-bottom"
+  },
+  "palette": {
+    "key": "demo_palette",
+    "label": "Demo Palette",
+    "colors": [
+      {
+        "colorIndex": 0,
+        "name": "Black",
+        "hex": "#212121",
+        "rgb": [33, 33, 33]
+      },
+      {
+        "colorIndex": 1,
+        "name": "White",
+        "hex": "#ffffff",
+        "rgb": [255, 255, 255]
+      },
+      {
+        "colorIndex": 2,
+        "name": "Red",
+        "hex": "#b30006",
+        "rgb": [179, 0, 6]
+      },
+      {
+        "colorIndex": 3,
+        "name": "Blue",
+        "hex": "#0057a6",
+        "rgb": [0, 87, 166]
+      }
+    ]
+  },
+  "pieces": {
+    "overallPlacements": [
+      {
+        "colorIndex": 0,
+        "colorName": "Black",
+        "colorHex": "#212121",
+        "count": 28
+      },
+      {
+        "colorIndex": 1,
+        "colorName": "White",
+        "colorHex": "#ffffff",
+        "count": 16
+      },
+      {
+        "colorIndex": 2,
+        "colorName": "Red",
+        "colorHex": "#b30006",
+        "count": 10
+      },
+      {
+        "colorIndex": 3,
+        "colorName": "Blue",
+        "colorHex": "#0057a6",
+        "count": 10
+      }
+    ],
+    "peakFrameInventory": [
+      {
+        "colorIndex": 0,
+        "colorName": "Black",
+        "colorHex": "#212121",
+        "count": 12
+      },
+      {
+        "colorIndex": 1,
+        "colorName": "White",
+        "colorHex": "#ffffff",
+        "count": 12
+      },
+      {
+        "colorIndex": 2,
+        "colorName": "Red",
+        "colorHex": "#b30006",
+        "count": 6
+      },
+      {
+        "colorIndex": 3,
+        "colorName": "Blue",
+        "colorHex": "#0057a6",
+        "count": 6
+      }
+    ],
+    "perFrame": [
+      {
+        "frameNumber": 1,
+        "fileName": "demo-project-frame-0001.png",
+        "timeSeconds": 0,
+        "pieceCounts": [
+          {
+            "colorIndex": 0,
+            "colorName": "Black",
+            "colorHex": "#212121",
+            "count": 12
+          },
+          {
+            "colorIndex": 2,
+            "colorName": "Red",
+            "colorHex": "#b30006",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "frameNumber": 2,
+        "fileName": "demo-project-frame-0002.png",
+        "timeSeconds": 0.5,
+        "pieceCounts": [
+          {
+            "colorIndex": 0,
+            "colorName": "Black",
+            "colorHex": "#212121",
+            "count": 12
+          },
+          {
+            "colorIndex": 3,
+            "colorName": "Blue",
+            "colorHex": "#0057a6",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "frameNumber": 3,
+        "fileName": "demo-project-frame-0003.png",
+        "timeSeconds": 1,
+        "pieceCounts": [
+          {
+            "colorIndex": 1,
+            "colorName": "White",
+            "colorHex": "#ffffff",
+            "count": 12
+          },
+          {
+            "colorIndex": 0,
+            "colorName": "Black",
+            "colorHex": "#212121",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "frameNumber": 4,
+        "fileName": "demo-project-frame-0004.png",
+        "timeSeconds": 1.5,
+        "pieceCounts": [
+          {
+            "colorIndex": 2,
+            "colorName": "Red",
+            "colorHex": "#b30006",
+            "count": 6
+          },
+          {
+            "colorIndex": 3,
+            "colorName": "Blue",
+            "colorHex": "#0057a6",
+            "count": 6
+          },
+          {
+            "colorIndex": 1,
+            "colorName": "White",
+            "colorHex": "#ffffff",
+            "count": 4
+          }
+        ]
+      }
+    ]
+  },
+  "frames": [
+    {
+      "frameNumber": 1,
+      "timeSeconds": 0,
+      "fileName": "demo-project-frame-0001.png",
+      "pieceCounts": [
+        {
+          "colorIndex": 0,
+          "colorName": "Black",
+          "colorHex": "#212121",
+          "count": 12
+        },
+        {
+          "colorIndex": 2,
+          "colorName": "Red",
+          "colorHex": "#b30006",
+          "count": 4
+        }
+      ],
+      "paletteRuns": [[0, 5], [2, 2], [0, 2], [2, 2], [0, 5]]
+    },
+    {
+      "frameNumber": 2,
+      "timeSeconds": 0.5,
+      "fileName": "demo-project-frame-0002.png",
+      "pieceCounts": [
+        {
+          "colorIndex": 0,
+          "colorName": "Black",
+          "colorHex": "#212121",
+          "count": 12
+        },
+        {
+          "colorIndex": 3,
+          "colorName": "Blue",
+          "colorHex": "#0057a6",
+          "count": 4
+        }
+      ],
+      "paletteRuns": [[0, 5], [3, 2], [0, 2], [3, 2], [0, 5]]
+    },
+    {
+      "frameNumber": 3,
+      "timeSeconds": 1,
+      "fileName": "demo-project-frame-0003.png",
+      "pieceCounts": [
+        {
+          "colorIndex": 1,
+          "colorName": "White",
+          "colorHex": "#ffffff",
+          "count": 12
+        },
+        {
+          "colorIndex": 0,
+          "colorName": "Black",
+          "colorHex": "#212121",
+          "count": 4
+        }
+      ],
+      "paletteRuns": [[1, 5], [0, 2], [1, 2], [0, 2], [1, 5]]
+    },
+    {
+      "frameNumber": 4,
+      "timeSeconds": 1.5,
+      "fileName": "demo-project-frame-0004.png",
+      "pieceCounts": [
+        {
+          "colorIndex": 2,
+          "colorName": "Red",
+          "colorHex": "#b30006",
+          "count": 6
+        },
+        {
+          "colorIndex": 3,
+          "colorName": "Blue",
+          "colorHex": "#0057a6",
+          "count": 6
+        },
+        {
+          "colorIndex": 1,
+          "colorName": "White",
+          "colorHex": "#ffffff",
+          "count": 4
+        }
+      ],
+      "paletteRuns": [[2, 2], [3, 2], [2, 1], [1, 2], [3, 1], [2, 1], [1, 2], [3, 1], [2, 2], [3, 2]]
+    }
+  ]
+}
