@@ -1,9 +1,13 @@
 # Lego-Mosaic-Motion
+This project is not affiliated with The Lego Group
 
-This is not a filter, turn any video into a lego mosaic motion video. 
+Turn any video into a lego mosaic motion video
+
+This is not a filter
 
 ![Lego Mosaic Motion Demo](topuria-ufc-lego-mosaic-loop.gif)
 
+each frame has been converted to a lego mosaic/
+
 This project is not affiliated with The Lego Group
 
-It works by taking each individual video frame and converting them to lego mosaics.
